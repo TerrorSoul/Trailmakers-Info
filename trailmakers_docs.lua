@@ -64,6 +64,11 @@ function tm.os.SetModTargetDeltaTime(targetDeltaTime) end
 function tm.os.GetModTargetDeltaTime() end
 
 
+--- Returns true if session is in singleplayer
+--- @return boolean
+function tm.os.IsSingleplayer() end
+
+
 --- Environment, Physics, Time, Assets and Objects.
 --- @class ModApiPhysics
 tm.physics = {}
@@ -226,7 +231,7 @@ function tm.physics.RaycastData(origin, direction, maxDistance, ignoreTriggers) 
 function tm.physics.GetMapName() end
 
 
---- Returns the wind velocity at a position
+--- Deprecated: Returns the wind velocity at a position
 --- @param position ModVector3
 --- @return ModVector3
 function tm.physics.GetWindVelocityAtPosition(position) end
@@ -277,6 +282,12 @@ function tm.players.CurrentPlayers() end
 function tm.players.Kick(playerId) end
 
 
+--- Get players unique profile id
+--- @param playerId number
+--- @return string
+function tm.players.GetPlayerProfileId(playerId) end
+
+
 --- Get the transform of a player
 --- @param playerId number
 --- @return ModTransform
@@ -293,6 +304,12 @@ function tm.players.GetPlayerGameObject(playerId) end
 --- @param playerId number
 --- @return boolean
 function tm.players.IsPlayerInSeat(playerId) end
+
+
+--- Returns ModStructure of the seat the player is in, or null if not in a seat
+--- @param playerId number
+--- @return ModStructure
+function tm.players.OccupiedStructure(playerId) end
 
 
 --- Kills a player
@@ -379,8 +396,9 @@ function tm.players.GetPlayerIsInBuildMode(playerId) end
 --- @param playerId number
 --- @param position ModVector3
 --- @param rotation ModVector3
+--- @param priority number
 --- @return nil
-function tm.players.AddCamera(playerId, position, rotation) end
+function tm.players.AddCamera(playerId, position, rotation, priority) end
 
 
 --- Remove a camera. THERE CAN ONLY BE 1 CAMERA PER PLAYER!
@@ -503,9 +521,44 @@ function tm.players.TeleportPlayerToSpawnPoint(playerId, spawnPointId, keepStruc
 function tm.players.TeleportAllPlayersToSpawnPoint(spawnPointId, keepStructure) end
 
 
+--- Gets the primary block color of a player.
+--- @param playerId number
+--- @return ModColor
+function tm.players.GetPrimaryBlockColor(playerId) end
+
+
+--- Gets the secondary block color of a player.
+--- @param playerId number
+--- @return ModColor
+function tm.players.GetSecondaryBlockColor(playerId) end
+
+
 --- UI Window.
 --- @class ModApiPlayerUI
 tm.playerUI = {}
+
+
+tm.playerUI.OnChatMessage = {}
+
+--- No description
+--- @param value Action`3
+--- @return nil
+function tm.playerUI.OnChatMessage.add(value) end
+
+
+--- No description
+--- @param value Action`3
+--- @return nil
+function tm.playerUI.OnChatMessage.remove(value) end
+
+
+--- Send a message to chat. The message will be sent to all players in the game. Ignored in singleplayer.
+--- @param senderName string
+--- @param message string
+--- @param color ModColor
+--- @return nil
+function tm.playerUI.SendChatMessage(senderName, message, color) end
+
 
 --- Add a button to the clients mod UI
 --- @param playerId number
@@ -573,6 +626,23 @@ function tm.playerUI.AddSubtleMessageForPlayer(playerId, header, message, durati
 --- @param spriteAssetName string
 --- @return string
 function tm.playerUI.AddSubtleMessageForAllPlayers(header, message, duration, spriteAssetName) end
+
+
+--- Shows an intrusive message for a specific player. Optional duration of the message can be added, default is 3 seconds.
+--- @param playerId number
+--- @param header string
+--- @param message string
+--- @param duration number
+--- @return nil
+function tm.playerUI.ShowIntrusiveMessageForPlayer(playerId, header, message, duration) end
+
+
+--- Shows an intrusive message for ALL players. Optional duration of the message can be added, default is 3 seconds.
+--- @param header string
+--- @param message string
+--- @param duration number
+--- @return nil
+function tm.playerUI.ShowIntrusiveMessageForAllPlayers(header, message, duration) end
 
 
 --- Removes a subtle message for a player
@@ -908,12 +978,192 @@ function tm.quaternion.GetEuler() end
 function tm.quaternion.Multiply(otherQuaternion) end
 
 
+--- Returns the resulting quaternion from a lerp between two quaternions
+--- @param firstQuaternion ModQuaternion
+--- @param secondQuaternion ModQuaternion
+--- @param t number
+--- @return ModQuaternion
+function tm.quaternion.Lerp(firstQuaternion, secondQuaternion, t) end
+
+
 --- Returns the resulting quaternion from a slerp between two quaternions
 --- @param firstQuaternion ModQuaternion
 --- @param secondQuaternion ModQuaternion
 --- @param t number
 --- @return ModQuaternion
 function tm.quaternion.Slerp(firstQuaternion, secondQuaternion, t) end
+
+
+--- No description
+--- @param first ModQuaternion
+--- @param second ModQuaternion
+--- @return boolean
+function tm.quaternion.op_Equality(first, second) end
+
+
+--- No description
+--- @param obj Object
+--- @return boolean
+function tm.quaternion.Equals(obj) end
+
+
+--- No description
+--- @param first ModQuaternion
+--- @param second ModQuaternion
+--- @return boolean
+function tm.quaternion.op_Inequality(first, second) end
+
+
+--- No description
+--- @return number
+function tm.quaternion.GetHashCode() end
+
+
+--- No description
+--- @return string
+function tm.quaternion.ToString() end
+
+
+--- Represents a color
+--- @class ModColor
+tm.color = {}
+
+--- No description
+--- @return ModColor
+function tm.color.Create() end
+
+
+--- No description
+--- @param r number
+--- @param g number
+--- @param b number
+--- @param a number
+--- @return ModColor
+function tm.color.Create(r, g, b, a) end
+
+
+--- No description
+--- @return string
+function tm.color.ToString() end
+
+
+--- No description
+--- @return number
+function tm.color.R() end
+
+
+--- No description
+--- @return number
+function tm.color.G() end
+
+
+--- No description
+--- @return number
+function tm.color.B() end
+
+
+--- No description
+--- @return number
+function tm.color.A() end
+
+
+--- No description
+--- @return ModColor
+function tm.color.White() end
+
+
+--- No description
+--- @return ModColor
+function tm.color.Black() end
+
+
+--- No description
+--- @return ModColor
+function tm.color.Red() end
+
+
+--- No description
+--- @return ModColor
+function tm.color.Green() end
+
+
+--- No description
+--- @return ModColor
+function tm.color.Blue() end
+
+
+--- No description
+--- @return ModColor
+function tm.color.Yellow() end
+
+
+--- No description
+--- @return ModColor
+function tm.color.Cyan() end
+
+
+--- No description
+--- @return ModColor
+function tm.color.Magenta() end
+
+
+--- No description
+--- @return ModColor
+function tm.color.Gray() end
+
+
+--- No description
+--- @return ModColor
+function tm.color.Clear() end
+
+
+--- No description
+--- @param a ModColor
+--- @param b ModColor
+--- @param t number
+--- @return ModColor
+function tm.color.Lerp(a, b, t) end
+
+
+--- No description
+--- @param hue number
+--- @param saturation number
+--- @param value number
+--- @return ModColor
+function tm.color.HSVToRGB(hue, saturation, value) end
+
+
+--- No description
+--- @param r number
+--- @param g number
+--- @param b number
+--- @return ModColor
+function tm.color.RGBToHSV(r, g, b) end
+
+
+--- No description
+--- @param first ModColor
+--- @param second ModColor
+--- @return boolean
+function tm.color.op_Equality(first, second) end
+
+
+--- No description
+--- @param obj Object
+--- @return boolean
+function tm.color.Equals(obj) end
+
+
+--- No description
+--- @param first ModColor
+--- @param second ModColor
+--- @return boolean
+function tm.color.op_Inequality(first, second) end
+
+
+--- No description
+--- @return number
+function tm.color.GetHashCode() end
 
 
 --- Callback data for when user is interacting with UI elements.
@@ -928,6 +1178,18 @@ tm.UICallbackData = {}
 --- Represents the current world.
 --- @class ModApiWorld
 tm.world = {}
+
+--- Set a global wind velocity. The wind velocity is a vector in world space, where the x, y and z components represent the wind direction and speed
+--- @param windVelocity ModVector3
+--- @return nil
+function tm.world.SetGlobalWind(windVelocity) end
+
+
+--- Returns the wind velocity at a position
+--- @param position ModVector3
+--- @return ModVector3
+function tm.world.GetWindVelocityAtPosition(position) end
+
 
 --- Set time of day. (0-100). No effect if time is paused.
 --- @param percentage number
@@ -1194,6 +1456,16 @@ function ModTransform.Left() end
 function ModTransform.Right() end
 
 
+--- Returns a normalized vector Up (world space)
+--- @return ModVector3
+function ModTransform.Up() end
+
+
+--- Returns a normalized vector Down (world space)
+--- @return ModVector3
+function ModTransform.Down() end
+
+
 --- Gets the position of the transform (world space)
 --- @return ModVector3
 function ModTransform.GetPositionWorld() end
@@ -1380,6 +1652,16 @@ function ModBlock.Left() end
 function ModBlock.Right() end
 
 
+--- Returns a normalized vector Up in world space
+--- @return ModVector3
+function ModBlock.Up() end
+
+
+--- Returns a normalized vector Down in world space
+--- @return ModVector3
+function ModBlock.Down() end
+
+
 --- [DEPRECATED USE SetPrimaryColor INSTEAD
 --- @param r number
 --- @param g number
@@ -1388,7 +1670,7 @@ function ModBlock.Right() end
 function ModBlock.SetColor(r, g, b) end
 
 
---- [In buildmode only] Set the blocks primary color
+--- Set the blocks primary color
 --- @param r number
 --- @param g number
 --- @param b number
@@ -1396,12 +1678,24 @@ function ModBlock.SetColor(r, g, b) end
 function ModBlock.SetPrimaryColor(r, g, b) end
 
 
---- [In buildmode only] Set the blocks secondary color
+--- Set the blocks primary color
+--- @param color ModColor
+--- @return nil
+function ModBlock.SetPrimaryColor(color) end
+
+
+--- Set the blocks secondary color
 --- @param r number
 --- @param g number
 --- @param b number
 --- @return nil
 function ModBlock.SetSecondaryColor(r, g, b) end
+
+
+--- Set the blocks secondary color
+--- @param color ModColor
+--- @return nil
+function ModBlock.SetSecondaryColor(color) end
 
 
 --- [In buildmode only] Set the blocks mass
@@ -1457,15 +1751,78 @@ function ModBlock.GetCurrentHealth() end
 function ModBlock.GetName() end
 
 
---- Set the drag value in all directions, front, back, up, down, left, right
---- @param f number
---- @param b number
---- @param u number
---- @param d number
---- @param l number
---- @param r number
+--- Manual AerodynamicBox definition
+---@class AerodynamicBox
+---@field forward number 
+---@field back number
+---@field up number 
+---@field down number
+---@field left number 
+---@field right number
+
+---Get the drag values of an aerodynamic box
+---@return AerodynamicBox
+--- @param aerodynamicBoxIndex number
+--- @return Table
+function ModBlock.GetDrag(aerodynamicBoxIndex) end
+
+
+--- Get the drag values for all aerodynamic boxes
+---@return AerodynamicBox[]
+--- @return Table
+function ModBlock.GetDragAll() end
+
+
+--- Expensive operation! Set the drag values of an aerodynamic box
+--- @param aerodynamicBoxIndex number
+--- @param forward number
+--- @param back number
+--- @param up number
+--- @param down number
+--- @param left number
+--- @param right number
 --- @return nil
-function ModBlock.SetDragAll(f, b, u, d, l, r) end
+function ModBlock.SetDrag(aerodynamicBoxIndex, forward, back, up, down, left, right) end
+
+
+--- Expensive operation! Set all of the aerodynamic boxes to the defined drag values
+--- @param forward number
+--- @param back number
+--- @param up number
+--- @param down number
+--- @param left number
+--- @param right number
+--- @return nil
+function ModBlock.SetDragAll(forward, back, up, down, left, right) end
+
+
+--- Reset the drag of a aerodynamic box to default values
+--- @param aerodynamicBoxIndex number
+--- @return nil
+function ModBlock.ResetDrag(aerodynamicBoxIndex) end
+
+
+--- Reset the drag values of all aerodynamic boxes to default values
+--- @return nil
+function ModBlock.ResetDragAll() end
+
+
+--- Get the default drag values of a aerodynamic box
+---@return AerodynamicBox
+--- @param aerodynamicBoxIndex number
+--- @return Table
+function ModBlock.GetDefaultDrag(aerodynamicBoxIndex) end
+
+
+--- Get the default drag values of all aerodynamic boxex
+---@return AerodynamicBox[]
+--- @return Table
+function ModBlock.GetDefaultDragAll() end
+
+
+--- Get number of aerodynamic boxes
+--- @return number
+function ModBlock.GetNumberOfAerodynamicBoxes() end
 
 
 --- Add a force to the given block as an impulse
@@ -1614,6 +1971,16 @@ function ModStructure.Left() end
 function ModStructure.Right() end
 
 
+--- Returns a normalized vector Up in world space
+--- @return ModVector3
+function ModStructure.Up() end
+
+
+--- Returns a normalized vector Down in world space
+--- @return ModVector3
+function ModStructure.Down() end
+
+
 --- Destroy the structure
 --- @return nil
 function ModStructure.Destroy() end
@@ -1632,7 +1999,12 @@ function ModStructure.GetBlocks() end
 function ModStructure.AddForce(x, y, z) end
 
 
---- Gets the velocity of the player inside of the structure.
+--- Gets the velocity of the player inside of the structure in world space.
+--- @return ModVector3
+function ModStructure.GetSeatedPlayerVelocity() end
+
+
+--- Gets the velocity of the structure's center of mass in world space.
 --- @return ModVector3
 function ModStructure.GetVelocity() end
 
@@ -1650,6 +2022,11 @@ function ModStructure.GetOwnedByPlayerId() end
 --- Returns the number of power cores of the structure.
 --- @return number
 function ModStructure.GetPowerCores() end
+
+
+--- Returns the Center of Mass of the structure in world space.
+--- @return ModVector3
+function ModStructure.GetWorldCenterOfMass() end
 
 
 --- No description
@@ -1686,6 +2063,20 @@ function ModRaycastHit.GetHitDistance() end
 ModColor = {}
 
 --- No description
+--- @return ModColor
+function ModColor.Create() end
+
+
+--- No description
+--- @param r number
+--- @param g number
+--- @param b number
+--- @param a number
+--- @return ModColor
+function ModColor.Create(r, g, b, a) end
+
+
+--- No description
 --- @return string
 function ModColor.ToString() end
 
@@ -1703,4 +2094,108 @@ function ModColor.G() end
 --- No description
 --- @return number
 function ModColor.B() end
+
+
+--- No description
+--- @return number
+function ModColor.A() end
+
+
+--- No description
+--- @return ModColor
+function ModColor.White() end
+
+
+--- No description
+--- @return ModColor
+function ModColor.Black() end
+
+
+--- No description
+--- @return ModColor
+function ModColor.Red() end
+
+
+--- No description
+--- @return ModColor
+function ModColor.Green() end
+
+
+--- No description
+--- @return ModColor
+function ModColor.Blue() end
+
+
+--- No description
+--- @return ModColor
+function ModColor.Yellow() end
+
+
+--- No description
+--- @return ModColor
+function ModColor.Cyan() end
+
+
+--- No description
+--- @return ModColor
+function ModColor.Magenta() end
+
+
+--- No description
+--- @return ModColor
+function ModColor.Gray() end
+
+
+--- No description
+--- @return ModColor
+function ModColor.Clear() end
+
+
+--- No description
+--- @param a ModColor
+--- @param b ModColor
+--- @param t number
+--- @return ModColor
+function ModColor.Lerp(a, b, t) end
+
+
+--- No description
+--- @param hue number
+--- @param saturation number
+--- @param value number
+--- @return ModColor
+function ModColor.HSVToRGB(hue, saturation, value) end
+
+
+--- No description
+--- @param r number
+--- @param g number
+--- @param b number
+--- @return ModColor
+function ModColor.RGBToHSV(r, g, b) end
+
+
+--- No description
+--- @param first ModColor
+--- @param second ModColor
+--- @return boolean
+function ModColor.op_Equality(first, second) end
+
+
+--- No description
+--- @param obj Object
+--- @return boolean
+function ModColor.Equals(obj) end
+
+
+--- No description
+--- @param first ModColor
+--- @param second ModColor
+--- @return boolean
+function ModColor.op_Inequality(first, second) end
+
+
+--- No description
+--- @return number
+function ModColor.GetHashCode() end
 
